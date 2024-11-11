@@ -75,9 +75,6 @@ class ShipCommandPrompt(cmd.Cmd):
     def help_library(self):
         print("Display the list of texts in the ship's library. Usage: /library")
 
-class ShipCommandPrompt(cmd.Cmd):
-    # ... (existing code)
-
     def do_help(self, arg):
         """List available commands with descriptions."""
         if arg:
@@ -94,7 +91,8 @@ class ShipCommandPrompt(cmd.Cmd):
             for command in self.get_names():
                 if command.startswith('do_'):
                     cmd_name = command[3:]
-                    print(f"{cmd_name}: {getattr(self, command).__doc__}")
+                    cmd_func = getattr(self, command)
+                    print(f"{cmd_name}: {cmd_func.__doc__}")
 
 if __name__ == "__main__":
     ShipCommandPrompt().cmdloop()
