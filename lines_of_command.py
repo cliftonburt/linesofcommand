@@ -3,12 +3,15 @@ import threading
 import time
 from rich.console import Console
 from rich.table import Table
-from rich.progress import track
+from rich.markdown import Markdown
+from rich.syntax import Syntax
+from rich.traceback import install
 from ship import Ship
 from navigation import Navigation
 from events import random_event
 
 console = Console()
+install()  # Install rich traceback handler
 
 class ShipCommandPrompt(cmd.Cmd):
     intro = "Welcome to Lines of Command! Type ? to list commands.\n"
@@ -39,18 +42,18 @@ class ShipCommandPrompt(cmd.Cmd):
     def do_sail(self, arg):
         """Sail the ship."""
         if self.is_sailing:
-            console.print("The ship is already sailing.", style="bold red")
+            console.print("[bold red]The ship is already sailing.[/bold red]")
         else:
             self.is_sailing = True
-            console.print("Sailing...", style="bold green")
+            console.print("[bold green]Sailing...[/bold green]")
 
     def do_stop(self, arg):
         """Stop the ship."""
         if not self.is_sailing:
-            console.print("The ship is not sailing.", style="bold red")
+            console.print("[bold red]The ship is not sailing.[/bold red]")
         else:
             self.is_sailing = False
-            console.print("Stopping the ship.", style="bold green")
+            console.print("[bold green]Stopping the ship.[/bold green]")
 
     def do_turn(self, direction):
         """
@@ -60,26 +63,34 @@ class ShipCommandPrompt(cmd.Cmd):
             direction (str): The direction to turn the ship ('port' or 'starboard').
         """
         if direction not in ["port", "starboard"]:
-            console.print("Invalid direction. Use 'port' or 'starboard'.", style="bold red")
+            console.print("[bold red]Invalid direction. Use 'port' or 'starboard'.[/bold red]")
             return
         new_direction = self.navigation.turn(direction)
         console.print(f"Turning {direction}. New direction: {new_direction}", style="bold green")
 
     def do_status(self, arg):
         """Display the current status of the ship."""
-        status = self.ship.get_status()
-        console.print(status, style="bold cyan")
+        try:
+            status = self.ship.get_status()
+            table = Table(title="Ship Status")
+            table.add_column("Attribute", style="cyan", no_wrap=True)
+            table.add_column("Value", style="magenta")
+            for key, value in status.items():
+                table.add_row(key, str(value))
+            console.print(table)
+        except Exception as e:
+            console.print(f"[bold red]Error retrieving ship status: {e}[/bold red]")
 
     def do_fire(self, side):
         """Fire the cannons on the specified side (port or starboard)."""
         if side not in ["port", "starboard"]:
-            console.print("Invalid side. Use 'port' or 'starboard'.", style="bold red")
+            console.print("[bold red]Invalid side. Use 'port' or 'starboard'.[/bold red]")
             return
         console.print(f"Firing {side} cannons!", style="bold green")
 
     def do_quit(self, arg):
         """Quit the game."""
-        console.print("Quitting the game.", style="bold red")
+        console.print("[bold red]Quitting the game.[/bold red]")
         self.stop_event.set()  # Signal the event thread to stop
         return True
 
@@ -114,6 +125,32 @@ class ShipCommandPrompt(cmd.Cmd):
 
     def help_library(self):
         console.print("Display the list of texts in the ship's library. Usage: /library", style="bold cyan")
+
+    def do_read_manual(self, arg):
+        """Read the ship's manual."""
+        manual_content = """
+        # Ship's Manual
+        ## Navigation
+        - Use `turn port` to turn the ship to the left.
+        - Use `turn starboard` to turn the ship to the right.
+
+        ## Combat
+        - Use `fire port` to fire the cannons on the left side.
+        - Use `fire starboard` to fire the cannons on the right side.
+        """
+        markdown = Markdown(manual_content)
+        console.print(markdown)
+
+    def do_show_code(self, arg):
+        """Show the source code of this script."""
+        with open(__file__, "r") as f:
+            code = f.read()
+        syntax = Syntax(code, "python", theme="monokai", line_numbers=True)
+        console.print(syntax)
+
+    def do_error(self, arg):
+        """Trigger an error to demonstrate rich tracebacks."""
+        raise ValueError("This is a demonstration error.")
 
     def do_help(self, arg):
         """List available commands with descriptions."""
