@@ -19,32 +19,37 @@ class ShipCommandPrompt(cmd.Cmd):
 
     def handle_events(self):
         while not self.stop_event.is_set():
-            time_to_sleep = 1200 + (time.time() % 1200)  # Random time between 20 to 40 minutes
-            time.sleep(time_to_sleep)
+            time.sleep(10)
             if not self.stop_event.is_set():
                 event = random_event()
                 print(f"\n{event}\n{self.prompt}", end='')
 
     def do_sail(self, arg):
+        """Sail the ship."""
         print("Sailing...")
 
     def do_turn(self, direction):
+        """Turn the ship in the specified direction (port or starboard)."""
         new_direction = self.navigation.turn(direction)
         print(f"Turning {direction}. New direction: {new_direction}")
 
     def do_status(self, arg):
+        """Display the current status of the ship."""
         status = self.ship.get_status()
         print(status)
 
     def do_fire(self, side):
+        """Fire the cannons on the specified side (port or starboard)."""
         print(f"Firing {side} cannons!")
 
     def do_quit(self, arg):
+        """Quit the game."""
         print("Quitting the game.")
         self.stop_event.set()  # Signal the event thread to stop
         return True
 
     def do_EOF(self, line):
+        """Handle EOF to quit the game."""
         return self.do_quit(line)
 
     def help_turn(self):
@@ -55,6 +60,7 @@ class ShipCommandPrompt(cmd.Cmd):
 
     # Additional commands
     def do_library(self, arg):
+        """Display the list of texts in the ship's library."""
         library_texts = [
             "On Naval Tactics by John Clerk of Eldin",
             "Instructions for Naval Officers (Royal Navy Manual, 1803)",
@@ -68,6 +74,27 @@ class ShipCommandPrompt(cmd.Cmd):
 
     def help_library(self):
         print("Display the list of texts in the ship's library. Usage: /library")
+
+class ShipCommandPrompt(cmd.Cmd):
+    # ... (existing code)
+
+    def do_help(self, arg):
+        """List available commands with descriptions."""
+        if arg:
+            # If a specific command is provided, show detailed help for that command
+            try:
+                func = getattr(self, 'help_' + arg)
+            except AttributeError:
+                print(f"No help available for {arg}")
+            else:
+                func()
+        else:
+            # General help message listing all commands
+            print("Available commands:")
+            for command in self.get_names():
+                if command.startswith('do_'):
+                    cmd_name = command[3:]
+                    print(f"{cmd_name}: {getattr(self, command).__doc__}")
 
 if __name__ == "__main__":
     ShipCommandPrompt().cmdloop()
