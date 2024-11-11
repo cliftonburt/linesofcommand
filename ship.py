@@ -1,4 +1,3 @@
-# This file will contain the Ship class and logic related to the ship’s status and provisions.
 class Ship:
     def __init__(self):
         self.hull_integrity = 100
@@ -6,6 +5,11 @@ class Ship:
         self.position = (0, 0)
 
     def get_status(self):
-        return (f"Hull Integrity: {self.hull_integrity}\n"
-                f"Provisions: {self.provisions}\n"
-                f"Position: {self.position}")
+        """
+        Return the current status of the ship as a dictionary.
+        """
+        return {
+            "Hull Integrity": self.hull_integrity,
+            "Provisions": self.provisions,
+            "Position": self.position
+        }
