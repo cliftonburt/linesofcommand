@@ -1,9 +1,14 @@
 import cmd
 import threading
 import time
+import logging
+
 from ship import Ship
 from navigation import Navigation
 from events import random_event
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class ShipCommandPrompt(cmd.Cmd):
     intro = "Welcome to Lines of Command! Type ? to list commands.\n"
@@ -22,8 +27,12 @@ class ShipCommandPrompt(cmd.Cmd):
         while not self.stop_event.is_set():
             time.sleep(10)
             if not self.stop_event.is_set():
-                event = random_event()
-                self.print_event(event)
+                self.trigger_event()
+
+    def trigger_event(self):
+        event = random_event()
+        self.print_event(event)
+        logging.info(f"Event occurred: {event}")
 
     def print_event(self, event):
         print(f"\n{event}\n{self.prompt}", end='')
@@ -32,30 +41,41 @@ class ShipCommandPrompt(cmd.Cmd):
         """Sail the ship."""
         if self.is_sailing:
             print("The ship is already sailing.")
+            logging.warning("Attempted to sail while already sailing.")
         else:
             self.is_sailing = True
             print("Sailing...")
+            logging.info("Ship started sailing.")
 
     def do_stop(self, arg):
         """Stop the ship."""
         if not self.is_sailing:
             print("The ship is not sailing.")
+            logging.warning("Attempted to stop while not sailing.")
         else:
             self.is_sailing = False
             print("Stopping the ship.")
+            logging.info("Ship stopped sailing.")
 
     def do_turn(self, direction):
-        """Turn the ship in the specified direction (port or starboard)."""
+        """
+        Turn the ship in the specified direction.
+
+        Args:
+            direction (str): The direction to turn the ship ('port' or 'starboard').
+        """
         if direction not in ["port", "starboard"]:
             print("Invalid direction. Use 'port' or 'starboard'.")
             return
         new_direction = self.navigation.turn(direction)
         print(f"Turning {direction}. New direction: {new_direction}")
+        logging.info(f"Ship turned {direction} to {new_direction}.")
 
     def do_status(self, arg):
         """Display the current status of the ship."""
         status = self.ship.get_status()
         print(status)
+        logging.info("Displayed ship status.")
 
     def do_fire(self, side):
         """Fire the cannons on the specified side (port or starboard)."""
@@ -63,11 +83,13 @@ class ShipCommandPrompt(cmd.Cmd):
             print("Invalid side. Use 'port' or 'starboard'.")
             return
         print(f"Firing {side} cannons!")
+        logging.info(f"Fired {side} cannons.")
 
     def do_quit(self, arg):
         """Quit the game."""
         print("Quitting the game.")
         self.stop_event.set()  # Signal the event thread to stop
+        logging.info("Game quitting.")
         return True
 
     def do_EOF(self, line):
@@ -79,6 +101,9 @@ class ShipCommandPrompt(cmd.Cmd):
 
     def complete_turn(self, text, line, begidx, endidx):
         return [direction for direction in ['port', 'starboard'] if direction.startswith(text)]
+
+    def complete_fire(self, text, line, begidx, endidx):
+        return [side for side in ['port', 'starboard'] if side.startswith(text)]
 
     # Additional commands
     def do_library(self, arg):
@@ -93,6 +118,7 @@ class ShipCommandPrompt(cmd.Cmd):
         print("Ship's Library:")
         for text in library_texts:
             print(f" - {text}")
+        logging.info("Displayed ship's library.")
 
     def help_library(self):
         print("Display the list of texts in the ship's library. Usage: /library")
