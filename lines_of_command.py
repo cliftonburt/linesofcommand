@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 class ShipCommandPrompt(cmd.Cmd):
     intro = "Welcome to Lines of Command! Type ? to list commands.\n"
-    prompt = "(ship) "
+    prompt = "(Captain) "
     
     def __init__(self):
         super().__init__()
@@ -25,7 +25,7 @@ class ShipCommandPrompt(cmd.Cmd):
 
     def handle_events(self):
         while not self.stop_event.is_set():
-            time.sleep(10)
+            time.sleep(1200)  # 20 minutes
             if not self.stop_event.is_set():
                 self.trigger_event()
 
