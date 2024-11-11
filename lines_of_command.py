@@ -13,14 +13,17 @@ class ShipCommandPrompt(cmd.Cmd):
         super().__init__()
         self.ship = Ship()
         self.navigation = Navigation()
+        self.stop_event = threading.Event()
         self.event_thread = threading.Thread(target=self.handle_events, daemon=True)
         self.event_thread.start()
 
     def handle_events(self):
-        while True:
-            time.sleep(10)
-            event = random_event()
-            print(f"\n{event}\n{self.prompt}", end='')
+        while not self.stop_event.is_set():
+            time_to_sleep = 1200 + (time.time() % 1200)  # Random time between 20 to 40 minutes
+            time.sleep(time_to_sleep)
+            if not self.stop_event.is_set():
+                event = random_event()
+                print(f"\n{event}\n{self.prompt}", end='')
 
     def do_sail(self, arg):
         print("Sailing...")
@@ -38,6 +41,7 @@ class ShipCommandPrompt(cmd.Cmd):
 
     def do_quit(self, arg):
         print("Quitting the game.")
+        self.stop_event.set()  # Signal the event thread to stop
         return True
 
     def do_EOF(self, line):
