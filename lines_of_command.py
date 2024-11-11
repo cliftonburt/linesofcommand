@@ -13,6 +13,7 @@ class ShipCommandPrompt(cmd.Cmd):
         super().__init__()
         self.ship = Ship()
         self.navigation = Navigation()
+        self.is_sailing = False
         self.stop_event = threading.Event()
         self.event_thread = threading.Thread(target=self.handle_events, daemon=True)
         self.event_thread.start()
@@ -22,14 +23,32 @@ class ShipCommandPrompt(cmd.Cmd):
             time.sleep(10)
             if not self.stop_event.is_set():
                 event = random_event()
-                print(f"\n{event}\n{self.prompt}", end='')
+                self.print_event(event)
+
+    def print_event(self, event):
+        print(f"\n{event}\n{self.prompt}", end='')
 
     def do_sail(self, arg):
         """Sail the ship."""
-        print("Sailing...")
+        if self.is_sailing:
+            print("The ship is already sailing.")
+        else:
+            self.is_sailing = True
+            print("Sailing...")
+
+    def do_stop(self, arg):
+        """Stop the ship."""
+        if not self.is_sailing:
+            print("The ship is not sailing.")
+        else:
+            self.is_sailing = False
+            print("Stopping the ship.")
 
     def do_turn(self, direction):
         """Turn the ship in the specified direction (port or starboard)."""
+        if direction not in ["port", "starboard"]:
+            print("Invalid direction. Use 'port' or 'starboard'.")
+            return
         new_direction = self.navigation.turn(direction)
         print(f"Turning {direction}. New direction: {new_direction}")
 
@@ -40,6 +59,9 @@ class ShipCommandPrompt(cmd.Cmd):
 
     def do_fire(self, side):
         """Fire the cannons on the specified side (port or starboard)."""
+        if side not in ["port", "starboard"]:
+            print("Invalid side. Use 'port' or 'starboard'.")
+            return
         print(f"Firing {side} cannons!")
 
     def do_quit(self, arg):
