@@ -1,37 +1,69 @@
-import argparse
+import cmd
+import threading
+import time
+from ship import Ship
+from navigation import Navigation
+from events import random_event
 
-def main():
-    # Initialize the argument parser
-    parser = argparse.ArgumentParser(description="Lines of Command - Command-line Naval Strategy Game")
+class ShipCommandPrompt(cmd.Cmd):
+    intro = "Welcome to Lines of Command! Type ? to list commands.\n"
+    prompt = "(ship) "
     
-    # Add arguments
-    parser.add_argument("--start", action="store_true", help="Start a new game")
-    parser.add_argument("--load", type=str, help="Load a saved game by specifying the filename")
-    parser.add_argument("--difficulty", choices=["easy", "normal", "hard"], default="normal", help="Set the difficulty level")
-    parser.add_argument("--debug", action="store_true", help="Enable debug mode for additional game details")
-    parser.add_argument("--fast-forward", type=int, metavar="MINUTES", help="Fast forward by specified minutes at start")
+    def __init__(self):
+        super().__init__()
+        self.ship = Ship()
+        self.navigation = Navigation()
+        self.event_thread = threading.Thread(target=self.handle_events, daemon=True)
+        self.event_thread.start()
 
-    # Parse arguments
-    args = parser.parse_args()
-    
-    # Handle arguments
-    if args.start:
-        print("Starting a new game...")
-        # Initialize a new game setup here
-    
-    if args.load:
-        print(f"Loading saved game from {args.load}...")
-        # Load game logic goes here
-    
-    print(f"Difficulty level set to: {args.difficulty}")
-    
-    if args.debug:
-        print("Debug mode enabled. Additional details will be displayed.")
-        # Enable debug settings in the game
-    
-    if args.fast_forward:
-        print(f"Fast-forwarding {args.fast_forward} minutes...")
-        # Implement fast-forward logic, if applicable
+    def handle_events(self):
+        while True:
+            time.sleep(10)
+            event = random_event()
+            print(f"\n{event}\n{self.prompt}", end='')
+
+    def do_sail(self, arg):
+        print("Sailing...")
+
+    def do_turn(self, direction):
+        new_direction = self.navigation.turn(direction)
+        print(f"Turning {direction}. New direction: {new_direction}")
+
+    def do_status(self, arg):
+        status = self.ship.get_status()
+        print(status)
+
+    def do_fire(self, side):
+        print(f"Firing {side} cannons!")
+
+    def do_quit(self, arg):
+        print("Quitting the game.")
+        return True
+
+    def do_EOF(self, line):
+        return self.do_quit(line)
+
+    def help_turn(self):
+        print("Turn the ship. Usage: turn [port|starboard]")
+
+    def complete_turn(self, text, line, begidx, endidx):
+        return [direction for direction in ['port', 'starboard'] if direction.startswith(text)]
+
+    # Additional commands
+    def do_library(self, arg):
+        library_texts = [
+            "On Naval Tactics by John Clerk of Eldin",
+            "Instructions for Naval Officers (Royal Navy Manual, 1803)",
+            "The Influence of Sea Power upon History, 1660-1783 by Alfred Thayer Mahan",
+            "The Mariners' Compass Rectified by Andrew Wakely",
+            "A New and Complete System of Navigation by John Hamilton Moore"
+        ]
+        print("Ship's Library:")
+        for text in library_texts:
+            print(f" - {text}")
+
+    def help_library(self):
+        print("Display the list of texts in the ship's library. Usage: /library")
 
 if __name__ == "__main__":
-    main()
+    ShipCommandPrompt().cmdloop()
