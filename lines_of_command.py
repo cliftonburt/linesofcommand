@@ -12,7 +12,7 @@ from navigation import Navigation
 from events import random_event
 
 # Initialize the rich console for styled output
-console = Console()
+console = Console(force_terminal=True)
 
 # Install rich traceback handler for better error visualization
 install()
@@ -323,16 +323,16 @@ class ShipCommandPrompt(cmd.Cmd):
                 func()
         else:
             # General help message listing all commands in a table
-            table = Table(title="Available Commands", show_header=True, header_style="bold magenta")
-            table.add_column("Command", style="cyan", no_wrap=True)
-            table.add_column("Description", style="magenta", justify="left", overflow="fold")
+            table = Table(title="Available Commands", show_header=True, header_style="bold magenta", border_style="bold blue")
+            table.add_column("Command", style="bold cyan", no_wrap=True)
+            table.add_column("Description", style="bold magenta", justify="left", overflow="fold")
             
             for command in self.get_names():
                 if command.startswith('do_'):
                     cmd_name = command[3:]
                     cmd_func = getattr(self, command)
                     description = cmd_func.__doc__ or "No description available"
-                    table.add_row(cmd_name, description)
+                    table.add_row(f"[bold cyan]{cmd_name}[/bold cyan]", description)
             
             console.print(table)
 
