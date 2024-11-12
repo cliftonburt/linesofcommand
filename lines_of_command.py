@@ -6,6 +6,7 @@ from rich.table import Table
 from rich.markdown import Markdown
 from rich.syntax import Syntax
 from rich.traceback import install
+from rich.progress import Progress
 from ship import Ship
 from navigation import Navigation
 from events import random_event
@@ -114,24 +115,30 @@ class ShipCommandPrompt(cmd.Cmd):
         """
         Display the current status of the ship.
         
-        This command retrieves and displays the ship's status in a table format.
+        This command retrieves and displays the ship's status and specifications in a table format.
         
         Args:
             arg (str): Additional arguments (not used).
         """
         try:
             status = self.ship.get_status()
-            if not isinstance(status, dict):
-                raise ValueError("Status should be a dictionary.")
+            specs = self.ship.get_specs()
             
-            table = Table(title="Ship Status")
+            table = Table(title="Ship Status and Specifications", show_header=True, header_style="bold magenta")
             table.add_column("Attribute", style="cyan", no_wrap=True)
-            table.add_column("Value", style="magenta")
+            table.add_column("Value", style="magenta", justify="left", overflow="fold")
+            
+            for key, value in specs.items():
+                table.add_row(key, str(value))
+            
+            table.add_row("----", "----")
+            
             for key, value in status.items():
                 table.add_row(key, str(value))
+            
             console.print(table)
         except AttributeError as e:
-            console.print(f"[bold red]Error: Ship object has no attribute 'get_status'.[/bold red]")
+            console.print(f"[bold red]Error: Ship object has no attribute 'get_status' or 'get_specs'.[/bold red]")
         except ValueError as e:
             console.print(f"[bold red]Error: {e}[/bold red]")
         except Exception as e:
@@ -283,6 +290,20 @@ class ShipCommandPrompt(cmd.Cmd):
         """
         raise ValueError("This is a demonstration error.")
 
+    def do_long_task(self, arg):
+        """
+        Simulate a long-running task with a loading bar.
+        
+        Args:
+            arg (str): Additional arguments (not used).
+        """
+        with Progress() as progress:
+            task = progress.add_task("[cyan]Processing...", total=100)
+            for i in range(100):
+                time.sleep(0.1)  # Simulate work being done
+                progress.update(task, advance=1)
+        console.print("[bold green]Task completed![/bold green]")
+
     def do_help(self, arg):
         """
         List available commands with descriptions.
@@ -301,13 +322,19 @@ class ShipCommandPrompt(cmd.Cmd):
             else:
                 func()
         else:
-            # General help message listing all commands
-            console.print("Available commands:", style="bold cyan")
+            # General help message listing all commands in a table
+            table = Table(title="Available Commands", show_header=True, header_style="bold magenta")
+            table.add_column("Command", style="cyan", no_wrap=True)
+            table.add_column("Description", style="magenta", justify="left", overflow="fold")
+            
             for command in self.get_names():
                 if command.startswith('do_'):
                     cmd_name = command[3:]
                     cmd_func = getattr(self, command)
-                    console.print(f"{cmd_name}: {cmd_func.__doc__}", style="bold green")
+                    description = cmd_func.__doc__ or "No description available"
+                    table.add_row(cmd_name, description)
+            
+            console.print(table)
 
 if __name__ == "__main__":
     ShipCommandPrompt().cmdloop()
