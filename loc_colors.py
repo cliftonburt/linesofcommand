@@ -22,9 +22,15 @@ colors = {
 # Initialize the console
 console = Console()
 
-# Create individual panels for each color
+# Define block elements
+light_shade = "\u2591"  # ░
+medium_shade = "\u2592"  # ▒
+dark_shade = "\u2593"  # ▓
+
+# Create a display for each block element in each color
 for name, hex_value in colors.items():
-    panel = Panel(f"{name}\n{hex_value}", style=hex_value, border_style=hex_value)
+    block_display = f"{light_shade} {medium_shade} {dark_shade}"
+    panel = Panel(block_display, title=name, style=hex_value, border_style=hex_value)
     console.print(panel)
 
 # Create a table to display all colors
