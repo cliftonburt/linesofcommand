@@ -1,3 +1,5 @@
+# loc_styles.py
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -31,12 +33,6 @@ def create_panel(content, title, style, border_style):
     """Create a panel with the given content, title, style, and border style."""
     return Panel(content, title=title, style=style, border_style=border_style)
 
-def display_color_panels():
-    """Display individual panels for each color in the palette."""
-    for name, hex_value in COLORS.items():
-        panel = create_panel(f"{name}\n{hex_value}", name, hex_value, hex_value)
-        console.print(panel)
-
 def create_color_table():
     """Create a table to display all colors with their descriptions."""
     table = Table(title="CRT-Inspired Color Palette", box=box.ROUNDED)
@@ -67,6 +63,12 @@ def create_color_table():
 
     return table
 
+def display_color_panels():
+    """Display individual panels for each color in the palette."""
+    for name, hex_value in COLORS.items():
+        panel = create_panel(f"{name}\n{hex_value}", name, hex_value, hex_value)
+        console.print(panel)
+
 def display_color_table():
     """Display the color table."""
     table = create_color_table()
@@ -88,12 +90,12 @@ def display_final_panel():
 
 def display_alert_messages():
     """Display dynamic, color-coded alert messages."""
-    console.print(Panel("[!] Caution: Low Wind Detected", style="bold #FFCC00", border_style="bold #FFCC00"))
-    console.print(Panel("[!!!] Alert: Enemy Ships Sighted", style="bold #FF3333", border_style="bold #FF3333"))
+    console.print(Panel("[!] Caution: Low Wind Detected 🌊", style="bold #FFCC00", border_style="bold #FFCC00"))
+    console.print(Panel("[!!!] Alert: Enemy Ships Sighted 🚢", style="bold #FF3333", border_style="bold #FF3333"))
 
 def display_command_prompt():
     """Display an example of an interactive command prompt."""
-    console.print(Panel("Enter Command: ", style="bold #33CCFF", border_style="bold #33CCFF"))
+    console.print(Panel("Enter Command: ⚓", style="bold #33CCFF", border_style="bold #33CCFF"))
 
 def display_block_elements():
     """Display block elements in each color from the palette."""
@@ -101,16 +103,3 @@ def display_block_elements():
         block_display = f"{LIGHT_SHADE} {MEDIUM_SHADE} {DARK_SHADE}"
         panel = create_panel(block_display, name, hex_value, hex_value)
         console.print(panel)
-
-# Main function to display all elements
-def main():
-    display_color_panels()
-    display_color_table()
-    display_text_styles()
-    display_final_panel()
-    display_alert_messages()
-    display_command_prompt()
-    display_block_elements()
-
-if __name__ == "__main__":
-    main()
