@@ -6,12 +6,13 @@ from rich.table import Table
 from rich.markdown import Markdown
 from rich.syntax import Syntax
 from rich.traceback import install
+from rich.progress import Progress
 from ship import Ship
 from navigation import Navigation
 from events import random_event
 
 # Initialize the rich console for styled output
-console = Console()
+console = Console(force_terminal=True)
 
 # Install rich traceback handler for better error visualization
 install()
@@ -114,24 +115,30 @@ class ShipCommandPrompt(cmd.Cmd):
         """
         Display the current status of the ship.
         
-        This command retrieves and displays the ship's status in a table format.
+        This command retrieves and displays the ship's status and specifications in a table format.
         
         Args:
             arg (str): Additional arguments (not used).
         """
         try:
             status = self.ship.get_status()
-            if not isinstance(status, dict):
-                raise ValueError("Status should be a dictionary.")
+            specs = self.ship.get_specs()
             
-            table = Table(title="Ship Status")
+            table = Table(title="Ship Status and Specifications", show_header=True, header_style="bold magenta")
             table.add_column("Attribute", style="cyan", no_wrap=True)
-            table.add_column("Value", style="magenta")
+            table.add_column("Value", style="magenta", justify="left", overflow="fold")
+            
+            for key, value in specs.items():
+                table.add_row(key, str(value))
+            
+            table.add_row("----", "----")
+            
             for key, value in status.items():
                 table.add_row(key, str(value))
+            
             console.print(table)
         except AttributeError as e:
-            console.print(f"[bold red]Error: Ship object has no attribute 'get_status'.[/bold red]")
+            console.print(f"[bold red]Error: Ship object has no attribute 'get_status' or 'get_specs'.[/bold red]")
         except ValueError as e:
             console.print(f"[bold red]Error: {e}[/bold red]")
         except Exception as e:
@@ -283,31 +290,74 @@ class ShipCommandPrompt(cmd.Cmd):
         """
         raise ValueError("This is a demonstration error.")
 
-    def do_help(self, arg):
+    def do_long_task(self, arg):
         """
-        List available commands with descriptions.
-        
-        This command displays a list of all available commands and their descriptions.
+        Simulate a long-running task with a loading bar.
         
         Args:
-            arg (str): The command to display detailed help for (optional).
+            arg (str): Additional arguments (not used).
         """
-        if arg:
-            # If a specific command is provided, show detailed help for that command
-            try:
-                func = getattr(self, 'help_' + arg)
-            except AttributeError:
-                console.print(f"No help available for {arg}", style="bold red")
-            else:
-                func()
+        with Progress() as progress:
+            task = progress.add_task("[cyan]Processing...", total=100)
+            for i in range(100):
+                time.sleep(0.1)  # Simulate work being done
+                progress.update(task, advance=1)
+        console.print("[bold green]Task completed![/bold green]")
+
+def do_help(self, arg):
+    """
+    List available commands with descriptions.
+
+    This command displays a list of all available commands and their descriptions.
+
+    Args:
+        arg (str): The command to display detailed help for (optional).
+    """
+    if arg:
+        # If a specific command is provided, show detailed help for that command
+        try:
+            func = getattr(self, 'help_' + arg)
+        except AttributeError:
+            console.print(f"No help available for {arg}", style="bold red")
         else:
-            # General help message listing all commands
-            console.print("Available commands:", style="bold cyan")
-            for command in self.get_names():
-                if command.startswith('do_'):
-                    cmd_name = command[3:]
-                    cmd_func = getattr(self, command)
-                    console.print(f"{cmd_name}: {cmd_func.__doc__}", style="bold green")
+            func()
+    else:
+        # Import the box module from rich for ASCII borders
+        from rich import box
+
+        # General help message listing all commands in a table with ASCII borders
+        table = Table(
+            title="Available Commands",
+            show_header=True,
+            header_style="bold magenta",
+            border_style="bold blue",
+            box=box.ASCII  # Use ASCII characters for table borders
+        )
+        table.add_column("Command", style="bold cyan", no_wrap=True)
+        table.add_column("Description", style="bold magenta", justify="left", overflow="fold")
+
+        # Collect commands and their descriptions
+        commands = []
+        for command in self.get_names():
+            if command.startswith('do_'):
+                cmd_name = command[3:]
+                cmd_func = getattr(self, command)
+                doc = cmd_func.__doc__
+                if doc:
+                    first_line = doc.strip().split('\n')[0]
+                else:
+                    first_line = "No description available"
+                commands.append((cmd_name, first_line))
+
+        # Sort commands alphabetically
+        commands.sort()
+
+        # Add commands to the table
+        for cmd_name, description in commands:
+            table.add_row(f"[bold cyan]{cmd_name}[/bold cyan]", description)
+
+        # Print the table to the console
+        console.print(table)
 
 if __name__ == "__main__":
     ShipCommandPrompt().cmdloop()
