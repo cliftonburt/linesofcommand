@@ -57,8 +57,6 @@ for (name, hex_value), description in zip(colors.items(), descriptions):
 console.print(table)
 
 # Demonstrate text styles and borders
-console.print(Text("Dotted Border Example", style="bold #33FF33"), style="bold #33FF33")
-console.print(Text("Dashed Border Example", style="bold #00FF00"), style="bold #00FF00")
 console.print(Text("Bold Text Example", style="bold #FF3333"))
 
 # Create a final example panel
@@ -68,3 +66,10 @@ final_panel = Panel(
     border_style="bold #FF9933"
 )
 console.print(final_panel)
+
+# Example of dynamic, color-coded alert messages
+console.print(Panel("[!] Caution: Low Wind Detected", style="bold #FFCC00", border_style="bold #FFCC00"))
+console.print(Panel("[!!!] Alert: Enemy Ships Sighted", style="bold #FF3333", border_style="bold #FF3333"))
+
+# Example of interactive command prompt
+console.print(Panel("Enter Command: ", style="bold #33CCFF", border_style="bold #33CCFF"))
