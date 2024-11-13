@@ -12,7 +12,7 @@ from navigation import Navigation
 from events import random_event
 
 # Initialize the rich console for styled output
-console = Console()
+console = Console(force_terminal=True)
 
 # Install rich traceback handler for better error visualization
 install()
@@ -304,37 +304,60 @@ class ShipCommandPrompt(cmd.Cmd):
                 progress.update(task, advance=1)
         console.print("[bold green]Task completed![/bold green]")
 
-    def do_help(self, arg):
-        """
-        List available commands with descriptions.
-        
-        This command displays a list of all available commands and their descriptions.
-        
-        Args:
-            arg (str): The command to display detailed help for (optional).
-        """
-        if arg:
-            # If a specific command is provided, show detailed help for that command
-            try:
-                func = getattr(self, 'help_' + arg)
-            except AttributeError:
-                console.print(f"No help available for {arg}", style="bold red")
-            else:
-                func()
+def do_help(self, arg):
+    """
+    List available commands with descriptions.
+
+    This command displays a list of all available commands and their descriptions.
+
+    Args:
+        arg (str): The command to display detailed help for (optional).
+    """
+    if arg:
+        # If a specific command is provided, show detailed help for that command
+        try:
+            func = getattr(self, 'help_' + arg)
+        except AttributeError:
+            console.print(f"No help available for {arg}", style="bold red")
         else:
-            # General help message listing all commands in a table
-            table = Table(title="Available Commands", show_header=True, header_style="bold magenta")
-            table.add_column("Command", style="cyan", no_wrap=True)
-            table.add_column("Description", style="magenta", justify="left", overflow="fold")
-            
-            for command in self.get_names():
-                if command.startswith('do_'):
-                    cmd_name = command[3:]
-                    cmd_func = getattr(self, command)
-                    description = cmd_func.__doc__ or "No description available"
-                    table.add_row(cmd_name, description)
-            
-            console.print(table)
+            func()
+    else:
+        # Import the box module from rich for ASCII borders
+        from rich import box
+
+        # General help message listing all commands in a table with ASCII borders
+        table = Table(
+            title="Available Commands",
+            show_header=True,
+            header_style="bold magenta",
+            border_style="bold blue",
+            box=box.ASCII  # Use ASCII characters for table borders
+        )
+        table.add_column("Command", style="bold cyan", no_wrap=True)
+        table.add_column("Description", style="bold magenta", justify="left", overflow="fold")
+
+        # Collect commands and their descriptions
+        commands = []
+        for command in self.get_names():
+            if command.startswith('do_'):
+                cmd_name = command[3:]
+                cmd_func = getattr(self, command)
+                doc = cmd_func.__doc__
+                if doc:
+                    first_line = doc.strip().split('\n')[0]
+                else:
+                    first_line = "No description available"
+                commands.append((cmd_name, first_line))
+
+        # Sort commands alphabetically
+        commands.sort()
+
+        # Add commands to the table
+        for cmd_name, description in commands:
+            table.add_row(f"[bold cyan]{cmd_name}[/bold cyan]", description)
+
+        # Print the table to the console
+        console.print(table)
 
 if __name__ == "__main__":
     ShipCommandPrompt().cmdloop()
