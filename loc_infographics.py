@@ -9,12 +9,11 @@ console = Console()
 # Gunnery Drill Panel
 def gunnery_drill():
     console.print("[bold red][Alert][/bold red]: Gunnery Drill Initiated - Objective: Achieve efficient loading and firing")
-    console.print("\nCaptain> load cannons")
     console.print("First Officer: “Aye, Captain. Men are loading the cannons as ordered.”\n")
 
     with Progress(
         TextColumn("[bold red][Progress][/bold red]: Cannons loading...", justify="left"),
-        BarColumn(bar_width=20, style="red"),
+        BarColumn(bar_width=20, complete_style="red", finished_style="green"),
         TextColumn("[bold red]{task.percentage:>3.0f}%[/bold red]")
     ) as progress:
         loading_task = progress.add_task("loading", total=100)

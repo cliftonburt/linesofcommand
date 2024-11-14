@@ -257,7 +257,6 @@ class ShipCommandPrompt(cmd.Cmd):
         ## Navigation
         - Use `turn port` to turn the ship to the left.
         - Use `turn starboard` to turn the ship to the right.
-
         ## Combat
         - Use `fire port` to fire the cannons on the left side.
         - Use `fire starboard` to fire the cannons on the right side.
@@ -274,10 +273,13 @@ class ShipCommandPrompt(cmd.Cmd):
         Args:
             arg (str): Additional arguments (not used).
         """
-        with open(__file__, "r") as f:
-            code = f.read()
-        syntax = Syntax(code, "python", theme="monokai", line_numbers=True)
-        console.print(syntax)
+        try:
+            with open(__file__, "r") as f:
+                code = f.read()
+            syntax = Syntax(code, "python", theme="monokai", line_numbers=True)
+            console.print(syntax)
+        except Exception as e:
+            console.print(f"Error reading source code: {e}", style="bold red")
 
     def do_error(self, arg):
         """
