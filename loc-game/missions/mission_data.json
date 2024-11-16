@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "name": "Rescue the Merchant Ship",
+        "description": "Rescue a merchant ship captured by pirates."
+    },
+    {
+        "id": 2,
+        "name": "Escort the Convoy",
+        "description": "Escort a convoy of ships through dangerous waters."
+    }
+]

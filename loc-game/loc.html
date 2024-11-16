@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lines of Command: HMS Resolute</title>
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            font-family: monospace;
+            margin: 0;
+            padding: 0;
+        }
+        #terminal {
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        input {
+            width: 100%;
+            background: black;
+            color: green;
+            border: none;
+            outline: none;
+            font-family: monospace;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal"></div>
+    <script>
+        const terminal = document.getElementById('terminal');
+        const input = document.createElement('input');
+        terminal.appendChild(input);
+
+        input.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const command = input.value;
+                terminal.innerHTML += `<div>> ${command}</div>`;
+                input.value = '';
+                fetch('http://127.0.0.1:5000/command', {  // Ensure this URL matches your Flask server URL
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ command })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    terminal.innerHTML += `<div>${data.response}</div>`;
+                    terminal.scrollTop = terminal.scrollHeight;
+                });
+            }
+        });
+
+        input.focus();
+    </script>
+</body>
+</html>

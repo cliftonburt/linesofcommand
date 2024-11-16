@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "name": "Navigation Challenge",
+        "description": "Solve the navigation puzzle to find the correct route."
+    },
+    {
+        "id": 2,
+        "name": "Gunnery Drill",
+        "description": "Complete the gunnery drill to improve your crew's accuracy."
+    }
+]
