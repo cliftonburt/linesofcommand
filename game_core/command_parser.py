@@ -30,7 +30,7 @@ def parse_command(command, settings):
         achievements.add_achievement(name)
         response = f"Achievement '{name}' added."
     elif command == "dashboard":
-        response = dashboards.show_dashboard()
+        dashboards.show_dashboard()
     elif command == "map":
         response = maps.generate_map()
     elif command == "missions":
@@ -68,6 +68,8 @@ def parse_command(command, settings):
             response = "Usage: advice <officer_role>"
     elif command == "pip":
         response = pip.get_pip_action()
+    elif command == "exit":
+        response = "exit"
     else:
         response = f"Unknown command: {command}"
     return response
