@@ -17,12 +17,17 @@
     <link rel="stylesheet" href="styles/cros-color-overrides.css?v=1.1">
 </head>
 <body>
+    <!-- Terminal container for the game -->
     <div id="terminal">
-        <p>Welcome to Lines of Command: HMS Resolute</p>
-        <p>Type your command below:</p>
+        <div id="output">
+            <p>Welcome to Lines of Command: HMS Resolute</p>
+            <p>Embark on an adventure as the captain of a British Man-o-War in 1805.</p>
+            <p>Type 'start' to begin your journey.</p>
+            <p>Press 'H' for Help, 'C' to Learn About Controls, 'Q' to Quit</p>
+        </div>
         <input type="text" id="command-input" autofocus>
-        <div id="output"></div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             const inputField = document.getElementById('command-input');
@@ -53,6 +58,8 @@
             function handleCommand(command) {
                 // Add your command handling logic here
                 switch (command.toLowerCase()) {
+                    case 'start':
+                        return 'Your journey begins now!';
                     case 'hoist sails':
                         return 'The crew scrambles to hoist the sails!';
                     case 'fire cannons':
@@ -61,6 +68,12 @@
                         return 'Current provisions and supplies: ...';
                     case 'dashboard':
                         return 'Showing the system dashboard...';
+                    case 'h':
+                        return 'Help: Use arrow keys or commands to navigate, engage enemies, and manage your ship.';
+                    case 'c':
+                        return 'Controls: Navigate using commands like "sail north" or "engage enemy".';
+                    case 'q':
+                        return 'Thank you for visiting Lines of Command. Goodbye!';
                     case 'exit':
                         return 'Ending the game...';
                     default:
