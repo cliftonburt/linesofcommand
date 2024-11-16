@@ -15,20 +15,23 @@ body {
     height: 100vh;
     overflow-y: auto;
     background: #000; /* Solid black background */
-    border: 2px solid #CCFF33; /* Yellow-green border for terminal */
+    border: 2px solid rgba(128, 128, 128, 0.2); /* Dimmed gray border */
     box-shadow: 0px 0px 20px rgba(204, 255, 51, 0.5); /* Green glowing shadow effect */
+    border-radius: 10px; /* Rounded corners for a smoother look */
+    animation: flicker 3s infinite;
 }
 
 /* Input Field Styling */
 input {
     width: 100%;
     background: transparent; /* Keeps the background consistent with terminal */
-    color: #33FF33; /* Medium green text */
+    color: #00ff00;
     border: none;
     outline: none;
     font-family: 'Courier New', monospace;
     font-size: 16px;
-    caret-color: #33FF33; /* Bright green cursor */
+    caret-color: #00ff00; /* Bright green cursor */
+    padding: 5px; /* Add padding for improved readability */
 }
 
 /* Additional Enhancements */
@@ -49,6 +52,7 @@ input {
 #terminal::-webkit-scrollbar-thumb {
     background-color: #33FF33;
     border-radius: 10px;
+    box-shadow: 0 0 5px #33FF33; /* Add glow effect to scrollbar thumb */
 }
 
 #terminal::-webkit-scrollbar-track {
@@ -63,24 +67,31 @@ button {
     padding: 10px;
     font-family: 'Courier New', monospace;
     cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+    box-shadow: 0 0 10px rgba(51, 255, 51, 0.5); /* Add subtle glow to button */
+    border-radius: 5px; /* Rounded corners for a modern look */
 }
 
 button:hover {
     background-color: #33FF33;
     color: #000;
+    box-shadow: 0 0 20px #33FF33; /* Intensify glow on hover */
 }
 
 /* Alert and Status Colors */
 .alert-warning {
     color: #FFCC00; /* Amber-yellow for warnings */
+    font-weight: bold;
 }
 
 .alert-error {
     color: #FF3333; /* Vivid red to indicate critical issues or errors */
+    font-weight: bold;
 }
 
 .status-success {
     color: #00FF00; /* Bright neon green for successful actions or completed tasks */
+    font-weight: bold;
 }
 
 .status-incomplete {
@@ -89,21 +100,51 @@ button:hover {
 
 .status-highlight {
     color: #FF9933; /* Soft orange for key details */
+    font-style: italic;
 }
 
 .status-accent {
     color: #33CCFF; /* Light blue for accents or secondary highlights */
+    text-decoration: underline;
 }
 
 /* Block Elements for Rich Console Effect */
 .block-light {
     color: #007700; /* Dark green for subtle text or inactive indicators */
+    opacity: 0.8; /* Reduce opacity for a dimmed effect */
 }
 
 .block-medium {
     color: #33FF33; /* Medium green for emphasized elements */
+    font-weight: bold;
 }
 
 .block-dark {
     color: #00FF00; /* Bright neon green for active or significant items */
+    font-weight: bold;
+    text-shadow: 0 0 10px #00FF00; /* Extra glow for emphasis */
+}
+
+/* Animation for Blinking Cursor Effect */
+.blinking-cursor {
+    font-weight: bold;
+    font-size: 18px;
+    color: #00FF00;
+    animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Animation for Subtle Terminal Background Flicker */
+@keyframes flicker {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.98;
+    }
 }

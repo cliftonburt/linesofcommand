@@ -14,56 +14,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lines of Command: HMS Resolute</title>
     <!-- Link to external stylesheet for terminal color overrides -->
-    <link rel="stylesheet" href="/styles/cros-color-overrides.css?v=1.1">
-    <style>
-        /*
-            Inline CSS for terminal styling.
-            - Black background with green monospace text to simulate a classic terminal.
-        */
-        body {
-            background-color: #1a1a1a; /* Darker black for subtle effect */
-            color: #00ff00; /* Bright green text */
-            font-family: 'Courier New', monospace;
-            margin: 0;
-            padding: 0;
-        }
-
-        #terminal {
-            padding: 20px;
-            height: 100vh;
-            overflow-y: auto;
-            background: #000;
-            border: 2px solid #00ff00; /* Green border for terminal */
-            box-shadow: 0px 0px 20px rgba(0, 255, 0, 0.5); /* Green glowing shadow effect */
-        }
-
-        input {
-            width: 100%;
-            background: transparent; /* Keeps the background consistent with terminal */
-            color: #00ff00;
-            border: none;
-            outline: none;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            caret-color: #00ff00; /* Bright green cursor */
-        }
-    </style>
+    <link rel="stylesheet" href="styles/cros-color-overrides.css?v=1.1">
 </head>
 <body>
     <div id="terminal">
         <p>Welcome to Lines of Command: HMS Resolute</p>
         <p>Type your command below:</p>
         <input type="text" id="command-input" autofocus>
+        <div id="output"></div>
     </div>
     <script>
-        window.onload = function() {
-            const link = document.querySelector('link[rel="stylesheet"]');
-            if (link) {
-                console.log('Stylesheet loaded:', link.href);
-            } else {
-                console.error('Stylesheet not found.');
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const inputField = document.getElementById('command-input');
+            const outputDiv = document.getElementById('output');
+
+            inputField.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const command = inputField.value.trim();
+                    if (command) {
+                        processCommand(command);
+                        inputField.value = '';
+                    }
+                }
+            });
+
+            function processCommand(command) {
+                const response = handleCommand(command);
+                const commandElement = document.createElement('p');
+                commandElement.textContent = `> ${command}`;
+                const responseElement = document.createElement('p');
+                responseElement.textContent = response;
+                outputDiv.appendChild(commandElement);
+                outputDiv.appendChild(responseElement);
+                outputDiv.scrollTop = outputDiv.scrollHeight;
             }
-        };
+
+            function handleCommand(command) {
+                // Add your command handling logic here
+                switch (command.toLowerCase()) {
+                    case 'hoist sails':
+                        return 'The crew scrambles to hoist the sails!';
+                    case 'fire cannons':
+                        return 'Firing cannons at nearby enemy ships!';
+                    case 'check provisions':
+                        return 'Current provisions and supplies: ...';
+                    case 'dashboard':
+                        return 'Showing the system dashboard...';
+                    case 'exit':
+                        return 'Ending the game...';
+                    default:
+                        return `Invalid command: '${command}'. Type 'help' for a list of commands.`;
+                }
+            }
+        });
     </script>
 </body>
 </html>
