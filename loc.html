@@ -1,61 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--
+        File: loc.html
+        Purpose: Location Display and Interaction
+        Description: This file provides a web interface for the player to interact with the ship's current location, 
+        navigate the map, and receive location-based events in "Lines of Command".
+        Notes:
+        - Currently part of the HTML5 faux-terminal version of "Lines of Command."
+        - Future expansions may involve integration with Slack, Discord, or similar platforms.
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lines of Command: HMS Resolute</title>
+    <!-- Link to external stylesheet for terminal color overrides -->
+    <link rel="stylesheet" href="/styles/cros-color-overrides.css?v=1.1">
     <style>
+        /*
+            Inline CSS for terminal styling.
+            - Black background with green monospace text to simulate a classic terminal.
+        */
         body {
-            background-color: black;
-            color: green;
-            font-family: monospace;
+            background-color: #1a1a1a; /* Darker black for subtle effect */
+            color: #00ff00; /* Bright green text */
+            font-family: 'Courier New', monospace;
             margin: 0;
             padding: 0;
         }
+
         #terminal {
             padding: 20px;
             height: 100vh;
             overflow-y: auto;
+            background: #000;
+            border: 2px solid #00ff00; /* Green border for terminal */
+            box-shadow: 0px 0px 20px rgba(0, 255, 0, 0.5); /* Green glowing shadow effect */
         }
+
         input {
             width: 100%;
-            background: black;
-            color: green;
+            background: transparent; /* Keeps the background consistent with terminal */
+            color: #00ff00;
             border: none;
             outline: none;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             font-size: 16px;
+            caret-color: #00ff00; /* Bright green cursor */
         }
     </style>
 </head>
 <body>
-    <div id="terminal"></div>
+    <div id="terminal">
+        <p>Welcome to Lines of Command: HMS Resolute</p>
+        <p>Type your command below:</p>
+        <input type="text" id="command-input" autofocus>
+    </div>
     <script>
-        const terminal = document.getElementById('terminal');
-        const input = document.createElement('input');
-        terminal.appendChild(input);
-
-        input.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                const command = input.value;
-                terminal.innerHTML += `<div>> ${command}</div>`;
-                input.value = '';
-                fetch('http://127.0.0.1:5000/command', {  // Ensure this URL matches your Flask server URL
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ command })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    terminal.innerHTML += `<div>${data.response}</div>`;
-                    terminal.scrollTop = terminal.scrollHeight;
-                });
+        window.onload = function() {
+            const link = document.querySelector('link[rel="stylesheet"]');
+            if (link) {
+                console.log('Stylesheet loaded:', link.href);
+            } else {
+                console.error('Stylesheet not found.');
             }
-        });
-
-        input.focus();
+        };
     </script>
 </body>
 </html>
