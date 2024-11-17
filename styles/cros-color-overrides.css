@@ -1,150 +1,74 @@
-/* Cros Color Overrides for Lines of Command Terminal Styling */
-
 /* General Body Styling */
 body {
-    background-color: #000000; /* Pure black background for a classic CRT look */
-    color: #33FF33; /* Medium green text for main content */
-    font-family: 'Courier New', monospace;
+    background-color: #0b0c0c; /* Stark black background */
+    color: #e4e4e4; /* Light gray text for readability */
+    font-family: 'Consolas', 'Courier New', monospace;
     margin: 0;
-    padding: 0;
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Terminal Container Styling */
-#terminal {
-    padding: 20px;
-    height: 100vh;
-    overflow-y: auto;
-    background: #000; /* Solid black background */
-    border: 2px solid rgba(128, 128, 128, 0.2); /* Dimmed gray border */
-    box-shadow: 0px 0px 20px rgba(204, 255, 51, 0.5); /* Green glowing shadow effect */
-    border-radius: 10px; /* Rounded corners for a smoother look */
-    animation: flicker 3s infinite;
-}
-
-/* Input Field Styling */
-input {
+/* Container to Center Terminal */
+.container {
     width: 100%;
-    background: transparent; /* Keeps the background consistent with terminal */
-    color: #00ff00;
+    max-width: 90%; /* Widen the terminal considerably */
+    text-align: center;
+}
+
+/* Terminal Styling */
+#terminal {
+    background-color: #000; /* Absolute black for terminal */
+    color: #e4e4e4; /* Light gray text */
+    border: 1px solid #1a1a1a; /* Subtle border for definition */
+    border-radius: 8px; /* Rounded corners for modern look */
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.8); /* Subtle shadow for depth */
+    width: 100%; /* Full width of the container */
+    max-width: 1200px; /* Maximum width for large screens */
+    min-height: 400px; /* Minimum height for balance */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    justify-content: space-between; /* Distribute content evenly */
+}
+
+/* Command-Line Input Box */
+#command-input {
+    background-color: #121212; /* Near-black for input area */
+    color: #e4e4e4; /* Light gray for input text */
     border: none;
     outline: none;
-    font-family: 'Courier New', monospace;
-    font-size: 16px;
-    caret-color: #00ff00; /* Bright green cursor */
-    padding: 5px; /* Add padding for improved readability */
+    padding: 10px;
+    font-family: 'Consolas', monospace;
+    font-size: 14px; /* Match the smaller text size */
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Include padding in width */
+    caret-color: #00b7ff; /* Bright blue caret for focus */
 }
 
-/* Additional Enhancements */
-#terminal div {
-    margin-bottom: 5px;
+/* Output Text Styling */
+.command-output {
+    background-color: #1a1a1a; /* Slightly lighter black for contrast */
+    color: #e4e4e4; /* Light gray for text */
+    padding: 10px;
+    border-radius: 4px; /* Rounded corners for modern feel */
+    border: 1px solid #333; /* Subtle border */
+    margin-bottom: 10px;
+    font-size: 14px; /* Match the smaller text size */
+    line-height: 1.4; /* Adjust line height for readability */
 }
 
-/* Text Glow Effect to Simulate CRT Monitor */
-#terminal, input {
-    text-shadow: 0 0 5px #33FF33, 0 0 10px #33FF33, 0 0 20px #33FF33;
-}
-
-/* Scrollbar Styling for Terminal */
+/* Scrollbar Styling */
 #terminal::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
 }
 
 #terminal::-webkit-scrollbar-thumb {
-    background-color: #33FF33;
-    border-radius: 10px;
-    box-shadow: 0 0 5px #33FF33; /* Add glow effect to scrollbar thumb */
+    background-color: #333; /* Dark scrollbar thumb */
+    border-radius: 5px; /* Rounded for smooth design */
 }
 
 #terminal::-webkit-scrollbar-track {
-    background: #000000;
-}
-
-/* Button Styling for Potential Future Enhancements */
-button {
-    background-color: #000;
-    color: #33FF33;
-    border: 1px solid #33FF33;
-    padding: 10px;
-    font-family: 'Courier New', monospace;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
-    box-shadow: 0 0 10px rgba(51, 255, 51, 0.5); /* Add subtle glow to button */
-    border-radius: 5px; /* Rounded corners for a modern look */
-}
-
-button:hover {
-    background-color: #33FF33;
-    color: #000;
-    box-shadow: 0 0 20px #33FF33; /* Intensify glow on hover */
-}
-
-/* Alert and Status Colors */
-.alert-warning {
-    color: #FFCC00; /* Amber-yellow for warnings */
-    font-weight: bold;
-}
-
-.alert-error {
-    color: #FF3333; /* Vivid red to indicate critical issues or errors */
-    font-weight: bold;
-}
-
-.status-success {
-    color: #00FF00; /* Bright neon green for successful actions or completed tasks */
-    font-weight: bold;
-}
-
-.status-incomplete {
-    color: #00CC00; /* Darker green for incomplete or low-priority items */
-}
-
-.status-highlight {
-    color: #FF9933; /* Soft orange for key details */
-    font-style: italic;
-}
-
-.status-accent {
-    color: #33CCFF; /* Light blue for accents or secondary highlights */
-    text-decoration: underline;
-}
-
-/* Block Elements for Rich Console Effect */
-.block-light {
-    color: #007700; /* Dark green for subtle text or inactive indicators */
-    opacity: 0.8; /* Reduce opacity for a dimmed effect */
-}
-
-.block-medium {
-    color: #33FF33; /* Medium green for emphasized elements */
-    font-weight: bold;
-}
-
-.block-dark {
-    color: #00FF00; /* Bright neon green for active or significant items */
-    font-weight: bold;
-    text-shadow: 0 0 10px #00FF00; /* Extra glow for emphasis */
-}
-
-/* Animation for Blinking Cursor Effect */
-.blinking-cursor {
-    font-weight: bold;
-    font-size: 18px;
-    color: #00FF00;
-    animation: blink 1s step-start infinite;
-}
-
-@keyframes blink {
-    50% {
-        opacity: 0;
-    }
-}
-
-/* Animation for Subtle Terminal Background Flicker */
-@keyframes flicker {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.98;
-    }
+    background-color: #0b0c0c; /* Match the stark black background */
 }

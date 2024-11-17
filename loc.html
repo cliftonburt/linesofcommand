@@ -15,72 +15,87 @@
     <title>Lines of Command: HMS Resolute</title>
     <!-- Link to external stylesheet for terminal color overrides -->
     <link rel="stylesheet" href="styles/cros-color-overrides.css?v=1.1">
+    <style>
+        .terminal-text {
+            font-size: 1.2em; /* Increase font size */
+            padding: 20px; /* Add padding */
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+            word-wrap: break-word; /* Break long words */
+            max-width: 100%; /* Ensure text stays within container */
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+    </style>
 </head>
 <body>
     <!-- Terminal container for the game -->
     <div id="terminal">
-        <div id="output">
-            <p>Welcome to Lines of Command: HMS Resolute</p>
-            <p>Embark on an adventure as the captain of a British Man-o-War in 1805.</p>
-            <p>Type 'start' to begin your journey.</p>
-            <p>Press 'H' for Help, 'C' to Learn About Controls, 'Q' to Quit</p>
+        <div id="output" class="terminal-text">
+================================================================================
+                      LINES OF COMMAND: HMS RESOLUTE                           
+================================================================================
+  The HMS Resolute awaits your command, Captain. The seas are yours to master.
+
+-- STATUS UPDATE ------------------------------------------------------------------------
+  Ship Name:          HMS Resolute
+  Ship Class:         Fifth-Rate Man-o-War
+  Crew:               210 men, ready for duty
+  Cannons:            32 (long guns and carronades)
+  Provisions:         Fully stocked for 3 months
+  Weather:            Favorable winds, clear skies
+---------------------------------------------------------------------------------------------------
+
+AVAILABLE OPTIONS:
+[1] Dashboards               - View ship status, crew morale, and resources.
+[2] Navigation               - Plot your course, explore the map, and set sail.
+[3] Events                   - Encounter events, engage enemies, and make decisions.
+[4] Ship's Log               - Review past events, missions, and discoveries.
+[5] Begin Command            - Start your first mission.
+[6] Enter Training Deck       - Practice essential skills and drills.
+[7] Explore Ship’s Library    - Access wisdom and lore from the Admiralty and beyond.
+[8] Load Saved Voyage         - Continue your previous journey.
+[9] Help                     - Get assistance with commands and navigation.
+[10] S.E.C.R.E.T.S.           - Access the Ship's Enhanced Command and Resource System.
+[11] Settings                - Adjust game settings and preferences.
+[12] About                   - Learn more about Lines of Command.
+[13] Exit                     - Leave the game
+
+> Enter your command below:
+
+-- SYSTEM MESSAGES ------------------------------------------------------------
+[ SYSTEM ] Initializing ship systems... ✅
+[ SYSTEM ] Crew morale is high. ⬆
+[ SYSTEM ] Awaiting orders, Captain.
+================================================================================
         </div>
-        <input type="text" id="command-input" autofocus>
+        <div style="display: flex; align-items: center;">
+            <input type="text" id="command-input" autofocus style="flex: 1;">
+            <button onclick="executeCommand()" style="background: none; border: none; color: #007bff; cursor: pointer; padding: 0 10px;">Submit</button>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const inputField = document.getElementById('command-input');
-            const outputDiv = document.getElementById('output');
+        const COMMANDS = [
+            "sail [direction] – Move the ship in a specified direction (N, S, E, W, NE, NW, SE, SW).",
+            "set course [location] – Plot a course to a known destination.",
+            "drop anchor – Stop the ship and hold position.",
+            "weigh anchor – Prepare the ship to set sail.",
+            "shorten sail – Reduce sail area to slow down.",
+        ];
 
-            inputField.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    const command = inputField.value.trim();
-                    if (command) {
-                        processCommand(command);
-                        inputField.value = '';
-                    }
-                }
-            });
-
-            function processCommand(command) {
-                const response = handleCommand(command);
-                const commandElement = document.createElement('p');
-                commandElement.textContent = `> ${command}`;
-                const responseElement = document.createElement('p');
-                responseElement.textContent = response;
-                outputDiv.appendChild(commandElement);
-                outputDiv.appendChild(responseElement);
-                outputDiv.scrollTop = outputDiv.scrollHeight;
-            }
-
-            function handleCommand(command) {
-                // Add your command handling logic here
-                switch (command.toLowerCase()) {
-                    case 'start':
-                        return 'Your journey begins now!';
-                    case 'hoist sails':
-                        return 'The crew scrambles to hoist the sails!';
-                    case 'fire cannons':
-                        return 'Firing cannons at nearby enemy ships!';
-                    case 'check provisions':
-                        return 'Current provisions and supplies: ...';
-                    case 'dashboard':
-                        return 'Showing the system dashboard...';
-                    case 'h':
-                        return 'Help: Use arrow keys or commands to navigate, engage enemies, and manage your ship.';
-                    case 'c':
-                        return 'Controls: Navigate using commands like "sail north" or "engage enemy".';
-                    case 'q':
-                        return 'Thank you for visiting Lines of Command. Goodbye!';
-                    case 'exit':
-                        return 'Ending the game...';
-                    default:
-                        return `Invalid command: '${command}'. Type 'help' for a list of commands.`;
-                }
+        document.getElementById('command-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                executeCommand();
             }
         });
+
+        function executeCommand() {
+            const input = document.getElementById('command-input').value.toLowerCase();
+            if (input === 'help') {
+                alert("Available commands:\n" + COMMANDS.join("\n"));
+            } else {
+                alert("Unknown command");
+            }
+        }
     </script>
 </body>
 </html>

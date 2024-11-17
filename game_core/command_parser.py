@@ -30,47 +30,123 @@ from missions import mission_loader
 from puzzles import puzzle_engine
 from npc import officers, pip
 from game_core.achievements import add_achievement
-#from visuals.dashboards import refresh_dashboard
+# from visuals.dashboards import refresh_dashboard
 
-VALID_COMMANDS = {
-    "hoist sails": "Increases ship speed",
-    "fire cannons": "Attacks nearby enemy ships",
-    "check provisions": "Displays current provisions and supplies",
-    "dashboard": "Shows the system dashboard",
-    "exit": "Ends the game"
-}
+# List of all commands
+COMMANDS = [
+    "sail [direction] – Move the ship in a specified direction (N, S, E, W, NE, NW, SE, SW).",
+    "set course [location] – Plot a course to a known destination.",
+    "drop anchor – Stop the ship and hold position.",
+    "weigh anchor – Prepare the ship to set sail.",
+    "shorten sail – Reduce sail area to slow down.",
+    "make sail – Increase sail area to pick up speed.",
+    "lay by – Wait in position without moving forward.",
+    "take soundings – Measure the water depth to avoid grounding.",
+    "spy with glass – Use a spyglass to examine distant objects or ships.",
+    "chart course – View a map of the surrounding area.",
+    "high cotton – Sail at full speed with all sails aloft.",
+    "engage [target] – Initiate combat with a nearby ship.",
+    "fire [cannons] – Fire the ship’s cannons at a target.",
+    "cease fire – Order the gunners to stop firing.",
+    "double-shot – Load cannons with double shot for close-range combat.",
+    "rake [target] – Fire across the length of an enemy ship for maximum damage.",
+    "brace – Order the crew to brace for an incoming attack.",
+    "board [ship] – Attempt to board a nearby vessel.",
+    "grapple – Use grappling hooks to secure an enemy ship for boarding.",
+    "strike colors – Surrender your ship to an enemy.",
+    "status – View the ship’s current condition, crew morale, and resources.",
+    "inspect ship – Perform a detailed inspection of the ship’s condition.",
+    "repair [part] – Assign the crew to repair a damaged part of the ship.",
+    "ration [amount] – Adjust the amount of food and water given to the crew.",
+    "splice the mainbrace – Distribute rum to the crew to boost morale.",
+    "muster the crew – Call the crew together for inspection or assignments.",
+    "sound the well – Check for leaks by measuring water in the bilge.",
+    "ready the longboat – Prepare the longboat for boarding or shore expeditions.",
+    "pipe down – Order the crew to rest or cease activities.",
+    "careen – Tilt the ship for hull maintenance.",
+    "take on provisions – Resupply food, water, and rum at a port.",
+    "inspect powder – Check the ship’s gunpowder stores.",
+    "cargo manifest – View the current cargo and inventory.",
+    "redistribute cargo – Adjust the cargo placement to balance the ship.",
+    "load [item] – Add items to the ship’s cargo hold.",
+    "unload [item] – Remove items from the ship’s cargo hold.",
+    "trade [item] – Exchange goods with another ship or port.",
+    "hail [target] – Attempt to communicate with another ship or port.",
+    "decode message – Decrypt intercepted communications or signals.",
+    "interrogate [spy] – Question a captured spy for intelligence.",
+    "read orders – Review the most recent orders from the Admiralty.",
+    "report – Send a report back to the Admiralty or receive new orders.",
+    "log this – Record a notable event or discovery in the Captain’s log.",
+    "decode [cipher] – Solve ciphers, such as Caesar or substitution ciphers.",
+    "interpret [semaphore] – Decipher semaphore signals.",
+    "calculate position – Use dead reckoning to estimate the ship’s location.",
+    "diagnose [problem] – Investigate and resolve mechanical failures.",
+    "identify [ship] – Use ship features to determine its origin or allegiance.",
+    "search [area] – Look for clues or hidden objects in the environment.",
+    "advise – Request suggestions from the officers based on the current situation.",
+    "promote [crew member] – Assign or promote a crew member to a key position.",
+    "discipline [crew member] – Handle unruly or underperforming crew.",
+    "listen to [officer] – Hear a specific officer’s opinion on the situation.",
+    "dock [port] – Enter a port to resupply or receive missions.",
+    "disembark – Send a small crew ashore for specific tasks.",
+    "explore – Investigate a nearby island or coastal area.",
+    "salvage [wreckage] – Search the remains of a ship for useful items.",
+    "search hold – Examine the ship’s cargo for contraband or needed supplies.",
+    "help – View a list of available commands.",
+    "save – Save the current game state.",
+    "load – Load a previously saved game state.",
+    "quit – Exit the game.",
+    "time – Check the current in-game time and date.",
+    "strike the bell – Mark the passage of time aboard the ship.",
+    "name the ship – Rename your ship to something more fitting.",
+    "crew list – View a roster of the ship’s crew and their statuses.",
+    "write log – Add a custom entry to the ship’s logbook.",
+    "fast forward – Skip uneventful travel or wait until the next significant event."
+]
 
-def parse_command(command: str, settings: dict):
+# Function to display help commands
+def display_help():
+    print("\nAvailable Commands:")
+    print("\n".join(f"- {cmd}" for cmd in COMMANDS))
+    print("\nType a command to proceed.\n")
+
+# Main input loop
+while True:
+    user_input = input("Enter command: ").strip().lower()
+    if user_input in {"/help", "help", "[9]"}:
+        display_help()
+    elif user_input == "quit":
+        print("Goodbye, Captain!")
+        break
+    else:
+        print("Unrecognized command. Type '/help' for a list of commands.")
+
+
+def parse_command(command):
     """
-    Parses the player's command and routes it to the appropriate function.
-
+    Parse the player command and execute the corresponding action.
+    
     Args:
-        command (str): The input command from the player.
-        settings (dict): The current game settings.
-
+        command (str): The command input by the player.
+    
     Returns:
-        str: Status or action result, or "exit" to quit the game.
+        str: The result of the command execution.
     """
     command = command.lower()
-    response = ""
-    if command in VALID_COMMANDS:
-        if command == "hoist sails":
-            response = "The crew scrambles to hoist the sails!"
-            update_dashboard("speed", +1) # type: ignore
-        elif command == "fire cannons":
-            response = "Firing cannons at nearby enemy ships!"
-            # Add logic to handle firing cannons
-        elif command == "check provisions":
-            response = "Current provisions and supplies: ..."
-            # Add logic to display provisions
-        elif command == "dashboard":
-            dashboards.show_dashboard()
-        elif command == "exit":
-            return "exit"
+    if command.startswith("sail"):
+        direction = command.split()[1]
+        return f"Sailing {direction}"
+    elif command.startswith("set course"):
+        location = command.split()[2]
+        return f"Setting course to {location}"
+    elif command == "drop anchor":
+        return "Dropping anchor"
+    elif command == "weigh anchor":
+        return "Weighing anchor"
+    elif command == "shorten sail":
+        return "Shortening sail"
     else:
-        response = f"Invalid command: '{command}'. Type 'help' for a list of commands."
-
-    return response
+        return "Unknown command"
 
 def parse_command_legacy(command, settings):
     response = ""
