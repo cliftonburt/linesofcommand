@@ -63,7 +63,7 @@ We welcome contributions to the **Lines of Command** project! Whether you have i
 - **Collaborators**: If you're interested in collaborating, please reach out—we'd love to expand the world of **Lines of Command** together.
 
 ## Community and Updates
-- **Weekly Puzzle Releases**: Stay tuned for weekly releases of new puzzles and backstory elements.
+- ** Puzzle Releases**: Stay tuned for  releases of new puzzles and backstory elements.
 - **Community Engagement**: Share your theories, solve puzzles together, and connect with other captains. Updates and hints will be provided regularly on the GitHub project page.
 
 ## License

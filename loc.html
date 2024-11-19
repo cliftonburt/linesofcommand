@@ -12,10 +12,57 @@
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lines of Command: HMS Resolute</title>
-    <!-- Link to external stylesheet for terminal color overrides -->
-    <link rel="stylesheet" href="styles/cros-color-overrides.css?v=1.1">
+    <title>ChatBot</title>
+    <link rel="stylesheet" href="cros-color-overrides.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000; /* Set background color to black */
+            color: #fff; /* Set text color to white */
+        }
+        #terminal {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #output {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            height: calc(100vh - 300px); /* Adjust height to accommodate input bar */
+            overflow-y: auto;
+        }
+        #input-container {
+            position: fixed;
+            bottom: 200px; /* Position 200px from the bottom */
+            left: 0;
+            right: 0;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5); /* 50% transparent black */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #command-input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #submit-button {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            padding: 0 10px;
+            font-size: 16px;
+        }
         .terminal-text {
             font-size: 1.2em; /* Increase font size */
             padding: 20px; /* Add padding */
@@ -27,75 +74,16 @@
     </style>
 </head>
 <body>
-    <!-- Terminal container for the game -->
-    <div id="terminal">
-        <div id="output" class="terminal-text">
-================================================================================
-                      LINES OF COMMAND: HMS RESOLUTE                           
-================================================================================
-  The HMS Resolute awaits your command, Captain. The seas are yours to master.
-
--- STATUS UPDATE ------------------------------------------------------------------------
-  Ship Name:          HMS Resolute
-  Ship Class:         Fifth-Rate Man-o-War
-  Crew:               210 men, ready for duty
-  Cannons:            32 (long guns and carronades)
-  Provisions:         Fully stocked for 3 months
-  Weather:            Favorable winds, clear skies
----------------------------------------------------------------------------------------------------
-
-AVAILABLE OPTIONS:
-[1] Dashboards               - View ship status, crew morale, and resources.
-[2] Navigation               - Plot your course, explore the map, and set sail.
-[3] Events                   - Encounter events, engage enemies, and make decisions.
-[4] Ship's Log               - Review past events, missions, and discoveries.
-[5] Begin Command            - Start your first mission.
-[6] Enter Training Deck       - Practice essential skills and drills.
-[7] Explore Ship’s Library    - Access wisdom and lore from the Admiralty and beyond.
-[8] Load Saved Voyage         - Continue your previous journey.
-[9] Help                     - Get assistance with commands and navigation.
-[10] S.E.C.R.E.T.S.           - Access the Ship's Enhanced Command and Resource System.
-[11] Settings                - Adjust game settings and preferences.
-[12] About                   - Learn more about Lines of Command.
-[13] Exit                     - Leave the game
-
-> Enter your command below:
-
--- SYSTEM MESSAGES ------------------------------------------------------------
-[ SYSTEM ] Initializing ship systems... ✅
-[ SYSTEM ] Crew morale is high. ⬆
-[ SYSTEM ] Awaiting orders, Captain.
-================================================================================
+    <div class="container">
+        <div id="terminal">
+            <div id="chat-history" class="command-output">
+                <!-- Chat messages will be dynamically added here -->
+            </div>
         </div>
-        <div style="display: flex; align-items: center;">
-            <input type="text" id="command-input" autofocus style="flex: 1;">
-            <button onclick="executeCommand()" style="background: none; border: none; color: #007bff; cursor: pointer; padding: 0 10px;">Submit</button>
+        <div id="command-box">
+            <input id="command-input" placeholder="Type your message..." autofocus>
         </div>
     </div>
-
-    <script>
-        const COMMANDS = [
-            "sail [direction] – Move the ship in a specified direction (N, S, E, W, NE, NW, SE, SW).",
-            "set course [location] – Plot a course to a known destination.",
-            "drop anchor – Stop the ship and hold position.",
-            "weigh anchor – Prepare the ship to set sail.",
-            "shorten sail – Reduce sail area to slow down.",
-        ];
-
-        document.getElementById('command-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                executeCommand();
-            }
-        });
-
-        function executeCommand() {
-            const input = document.getElementById('command-input').value.toLowerCase();
-            if (input === 'help') {
-                alert("Available commands:\n" + COMMANDS.join("\n"));
-            } else {
-                alert("Unknown command");
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

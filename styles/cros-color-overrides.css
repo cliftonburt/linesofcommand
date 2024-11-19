@@ -6,18 +6,22 @@ body {
     margin: 0;
     height: 100vh; /* Full viewport height */
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 
-/* Container to Center Terminal */
+/* Container Styling */
 .container {
+    position: relative;
     width: 100%;
-    max-width: 90%; /* Widen the terminal considerably */
-    text-align: center;
+    max-width: 90%; /* Widen container for readability */
+    height: 90vh; /* Take most of the viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
-/* Terminal Styling */
+/* Terminal (Chat History) */
 #terminal {
     background-color: #000; /* Absolute black for terminal */
     color: #e4e4e4; /* Light gray text */
@@ -25,38 +29,70 @@ body {
     border-radius: 8px; /* Rounded corners for modern look */
     padding: 20px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.8); /* Subtle shadow for depth */
-    width: 100%; /* Full width of the container */
-    max-width: 1200px; /* Maximum width for large screens */
-    min-height: 400px; /* Minimum height for balance */
+    width: 100%;
+    max-width: 1200px;
+    height: calc(100% - 60px); /* Leave space for input box */
+    overflow-y: auto; /* Scrollable history */
     display: flex;
-    flex-direction: column; /* Stack content vertically */
-    justify-content: space-between; /* Distribute content evenly */
+    flex-direction: column;
+    gap: 10px;
 }
 
-/* Command-Line Input Box */
+/* Chat History Messages */
+#chat-history {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Chat Messages */
+.chat-message {
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 14px; /* Match the smaller text size */
+    line-height: 1.4; /* Adjust line height for readability */
+    word-wrap: break-word;
+    max-width: 80%;
+}
+
+.user-message {
+    background-color: #1a1a1a; /* Slightly lighter black for user messages */
+    color: #e4e4e4; /* Light gray text */
+    align-self: flex-end;
+}
+
+.bot-message {
+    background-color: #121212; /* Near-black for bot messages */
+    color: #00b7ff; /* Bright blue for bot text */
+    align-self: flex-start;
+}
+
+/* Command Box */
+#command-box {
+    position: sticky; /* Always visible at the bottom */
+    bottom: 0;
+    width: 100%;
+    background-color: #121212; /* Slightly lighter black for command box */
+    border-top: 1px solid #333; /* Subtle top border */
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.5); /* Floating effect */
+}
+
+/* Command Input */
 #command-input {
-    background-color: #121212; /* Near-black for input area */
-    color: #e4e4e4; /* Light gray for input text */
+    background-color: #1a1a1a; /* Dark input background */
+    color: #e4e4e4; /* Light gray text */
     border: none;
     outline: none;
     padding: 10px;
     font-family: 'Consolas', monospace;
-    font-size: 14px; /* Match the smaller text size */
-    width: 100%; /* Full width */
-    box-sizing: border-box; /* Include padding in width */
-    caret-color: #00b7ff; /* Bright blue caret for focus */
-}
-
-/* Output Text Styling */
-.command-output {
-    background-color: #1a1a1a; /* Slightly lighter black for contrast */
-    color: #e4e4e4; /* Light gray for text */
-    padding: 10px;
-    border-radius: 4px; /* Rounded corners for modern feel */
-    border: 1px solid #333; /* Subtle border */
-    margin-bottom: 10px;
-    font-size: 14px; /* Match the smaller text size */
-    line-height: 1.4; /* Adjust line height for readability */
+    font-size: 14px;
+    width: 100%;
+    border-radius: 4px; /* Rounded corners */
+    caret-color: #00b7ff; /* Bright blue caret */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow */
 }
 
 /* Scrollbar Styling */
@@ -66,9 +102,9 @@ body {
 
 #terminal::-webkit-scrollbar-thumb {
     background-color: #333; /* Dark scrollbar thumb */
-    border-radius: 5px; /* Rounded for smooth design */
+    border-radius: 5px; /* Rounded scrollbar */
 }
 
 #terminal::-webkit-scrollbar-track {
-    background-color: #0b0c0c; /* Match the stark black background */
+    background-color: #0b0c0c; /* Match stark black background */
 }
