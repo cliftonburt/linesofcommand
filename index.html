@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lines of Command</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+        }
+        #chat-container {
+            width: 800px; /* Increased width by 100% (from 400px to 800px) */
+            border: 1px solid #3c3c3c;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            background-color: #252526;
+        }
+        #chat-history {
+            height: 450px; /* Increased height by 150% (from 300px to 450px) */
+            overflow-y: auto;
+            border-bottom: 1px solid #3c3c3c;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #1e1e1e;
+        }
+        .message {
+            margin: 5px 0;
+        }
+        .user-message {
+            text-align: right;
+            color: #569cd6;
+        }
+        .bot-message {
+            text-align: left;
+            color: #dcdcaa;
+        }
+        #message-input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #3c3c3c;
+            border-radius: 5px;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+        }
+        #message-input:focus {
+            border-color: #569cd6;
+            outline: none;
+        }
+        #message-input::placeholder {
+            color: #d4d4d4;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-history"></div>
+        <input type="text" id="message-input" placeholder="Type a message..." />
+    </div>
+
+    <script>
+        const chatHistory = document.getElementById('chat-history');
+        const messageInput = document.getElementById('message-input');
+
+        messageInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                const userMessage = messageInput.value;
+                if (userMessage.trim() !== '') {
+                    addMessage(userMessage, 'user-message');
+                    messageInput.value = '';
+                    setTimeout(() => {
+                        addMessage('This is a bot response.', 'bot-message');
+                    }, 1000);
+                }
+            }
+        });
+
+        function addMessage(text, className) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${className}`;
+            messageElement.textContent = text;
+            chatHistory.appendChild(messageElement);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+    </script>
+</body>
+</html>
